@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::any('{any}', function () {
+    return response()->json([
+        'message' => 'API Endpoint - Para documentação acesse /api',
+        'status' => 'success'
+    ], 200);
+})->where('any', '.*');
