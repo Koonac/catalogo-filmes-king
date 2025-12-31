@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TmdbController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,8 +14,7 @@ Route::get('/', function () {
 	]);
 });
 
-Route::get('/test', function (Request $request) {
-	return response()->json([
-		'message' => 'Hello World'
-	]);
-});
+/*
+ * Tmdb API - Search Movie
+ */
+Route::get('/search-movie', [TmdbController::class, 'searchMovie']);
