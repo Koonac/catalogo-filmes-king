@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\FavoriteMovieController;
 use App\Http\Controllers\TmdbController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,10 +14,13 @@ Route::get('/', function () {
 	]);
 });
 
-/*
- * Tmdb API - Search Movie
- */
 Route::group(['prefix' => 'tmdb'], function () {
 	Route::get('/search-movie', [TmdbController::class, 'searchMovie']);
 	Route::get('/details-movie', [TmdbController::class, 'getDetailsMovieById']);
+});
+
+Route::group(['prefix' => 'favorites'], function () {
+	Route::get('/list', [FavoriteMovieController::class, 'list']);
+	Route::post('/add', [FavoriteMovieController::class, 'add']);
+	Route::delete('/remove', [FavoriteMovieController::class, 'remove']);
 });
