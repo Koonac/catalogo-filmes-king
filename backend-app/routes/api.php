@@ -17,4 +17,7 @@ Route::get('/', function () {
 /*
  * Tmdb API - Search Movie
  */
-Route::get('/search-movie', [TmdbController::class, 'searchMovie']);
+Route::group(['prefix' => 'tmdb'], function () {
+	Route::get('/search-movie', [TmdbController::class, 'searchMovie']);
+	Route::get('/details-movie', [TmdbController::class, 'getDetailsMovieById']);
+});
