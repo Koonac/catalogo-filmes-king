@@ -22,9 +22,13 @@ defineProps({
     type: String,
     default: "",
   },
+  isFavorite: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-defineEmits(["favorite", "moreInfo"]);
+defineEmits(["addFavorite", "removeFavorite", "moreInfo"]);
 </script>
 
 <template>
@@ -40,12 +44,18 @@ defineEmits(["favorite", "moreInfo"]);
       />
       <!-- Botão de favoritar -->
       <button
-        @click.stop="$emit('favorite')"
+        @click.stop="isFavorite ? $emit('removeFavorite') : $emit('addFavorite')"
         class="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-200 z-10 backdrop-blur-sm group/favorite cursor-pointer"
       >
         <Icon
+          v-if="!isFavorite"
           icon="mage:heart"
           class="w-6 h-6 text-white group-hover/favorite:hidden"
+        />
+        <Icon
+          v-else
+          icon="mage:heart-fill"
+          class="w-6 h-6 text-red-500 group-hover/favorite:hidden"
         />
         <Icon
           icon="mage:heart-fill"
