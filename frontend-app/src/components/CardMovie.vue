@@ -1,6 +1,6 @@
 <script setup>
 import { Icon } from "@iconify/vue";
-
+import Button from "./Button.vue";
 defineProps({
   image: {
     type: String,
@@ -14,13 +14,17 @@ defineProps({
     type: [Number, String],
     required: true,
   },
+  year: {
+    type: [Number, String],
+    required: true,
+  },
   hoverText: {
     type: String,
     default: "",
   },
 });
 
-defineEmits(["favorite"]);
+defineEmits(["favorite", "moreInfo"]);
 </script>
 
 <template>
@@ -52,23 +56,46 @@ defineEmits(["favorite"]);
       <div
         class="absolute inset-0 bg-black/0 group-hover:bg-black/70 transition-all duration-300 flex items-center justify-center"
       >
-        <p
-          v-if="hoverText"
-          class="text-white text-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm md:text-base"
-        >
-          {{ hoverText }}
-        </p>
+        <div class="flex flex-col justify-between gap-8">
+          <h3
+            class="text-white/90 text-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-lg md:text-xl font-bold"
+          >
+            {{ title }}
+          </h3>
+          <p
+            v-if="hoverText"
+            class="text-white/85 text-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm md:text-base"
+          >
+            {{
+              hoverText.length > 310
+                ? hoverText.substring(0, 310) + "..."
+                : hoverText
+            }}
+          </p>
+          <p
+            class="flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <Button color="primary" variant="solid" @click="$emit('moreInfo')">
+              Saiba mais
+            </Button>
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- Informações do filme -->
     <div class="p-4 bg-white">
       <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-        {{ title }}
+        {{ title.length > 30 ? title.substring(0, 35) + "..." : title }}
       </h3>
-      <div class="flex items-center gap-2">
-        <span class="text-yellow-500 font-bold">{{ rating }}</span>
-        <span class="text-gray-500 text-sm">/ 10</span>
+      <div class="flex justify-between items-center gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-yellow-500 font-bold">{{ rating }}</span>
+          <span class="text-gray-500 text-sm">/ 10</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-gray-500 text-sm">Ano: {{ year }}</span>
+        </div>
       </div>
     </div>
   </div>

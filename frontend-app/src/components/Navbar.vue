@@ -18,7 +18,7 @@
         </RouterLink>
       </div>
       <ul
-        class="flex list-none m-0 p-0 gap-4 md:gap-8 items-center md:flex-row flex-col w-full md:w-auto justify-center md:mx-auto"
+        class="flex list-none m-0 p-0 gap-4 md:gap-8 items-center w-full md:w-auto justify-center md:mx-auto"
       >
         <li>
           <RouterLink
