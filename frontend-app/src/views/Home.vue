@@ -5,12 +5,17 @@ import CardMovie from "../components/CardMovie.vue";
 import { useMoviesStore } from "../stores/movies";
 import { useFavoriteStore } from "../stores/favorites";
 import { Icon } from "@iconify/vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 // INICIALIZANDO VARIÁVEIS
 const moviesStore = useMoviesStore();
 const favoriteStore = useFavoriteStore();
 const searchQuery = ref("");
+
+// FUNÇÃO PARA CARREGAR FILMES FAVORITOS
+onMounted(async () => {
+  await favoriteStore.fetchFavorites();
+});
 
 // FUNÇÃO PARA PESQUISAR FILMES
 const handleSearchMovies = async () => {
@@ -20,6 +25,14 @@ const handleSearchMovies = async () => {
 // FUNÇÃO PARA ADICIONAR FILME FAVORITO
 const handleAddFavorite = async (tmdbId) => {
   await favoriteStore.addFavorite(tmdbId);
+  await favoriteStore.fetchFavorites();
+};
+
+// FUNÇÃO PARA REMOVER FILME FAVORITO
+const handleRemoveFavorite = async (id) => {
+  console.log(id);
+
+  await favoriteStore.removeFavorite(id);
 };
 </script>
 
@@ -79,6 +92,10 @@ const handleAddFavorite = async (tmdbId) => {
           :year="movie.release_date.split('-')[0]"
           :hoverText="movie.overview"
           @addFavorite="handleAddFavorite(movie.id)"
+          @removeFavorite="
+            handleRemoveFavorite(favoriteStore.getIdFavoriteByTmdbId(movie.id))
+          "
+          :isFavorite="favoriteStore.isFavorite(movie.id)"
         />
       </div>
     </div>

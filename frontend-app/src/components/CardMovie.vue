@@ -82,13 +82,13 @@ defineEmits(["addFavorite", "removeFavorite", "moreInfo"]);
                 : hoverText
             }}
           </p>
-          <p
+          <!-- <p
             class="flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           >
             <Button color="primary" variant="solid" @click="$emit('moreInfo')">
               Saiba mais
             </Button>
-          </p>
+          </p> -->
         </div>
       </div>
     </div>

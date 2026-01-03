@@ -13,8 +13,15 @@ export const useFavoriteStore = defineStore("favorites", {
 
   getters: {
     favoritesCount: (state) => state.favorites.length,
-    isFavorite: (state) => (movieId) => {
-      return state.favorites.some((fav) => fav.tmdb_id === movieId);
+    favoritesListTmdbId: (state) =>
+      state.favorites.map((favorite) => favorite.tmdb_id),
+    isFavorite: (getters) => (tmdbId) => {
+      return getters.favoritesListTmdbId.includes(String(tmdbId));
+    },
+    getIdFavoriteByTmdbId: (state) => (tmdbId) => {
+      return state.favorites.find(
+        (favorite) => String(favorite.tmdb_id) === String(tmdbId)
+      )?.id;
     },
   },
 
