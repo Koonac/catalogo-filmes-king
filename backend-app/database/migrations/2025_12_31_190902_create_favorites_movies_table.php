@@ -19,7 +19,7 @@ return new class extends Migration
 			$table->string('original_language')->nullable();
 			$table->string('original_title')->nullable();
 			$table->string('title')->nullable();
-			$table->string('overview')->nullable();
+			$table->longText('overview')->nullable();
 			$table->string('backdrop_path')->nullable();
 			$table->string('poster_path')->nullable();
 			$table->string('release_date')->nullable();
