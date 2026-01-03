@@ -25,6 +25,49 @@ class FavoriteMovieService
 	}
 
 	/**
+	 * Adiciona um filme favorito por tmdb_id
+	 * @param int $tmdb_id
+	 * @return array
+	 */
+	public function addByTmdbId(int $tmdb_id)
+	{
+		try {
+			/* VERIFICANDO SE O FILME JÁ ESTÁ NA BASE DE DADOS */
+			$favoriteMovie = $this->favoriteMovieModel->where('tmdb_id', $tmdb_id)->first();
+			if ($favoriteMovie) {
+				throw new \Exception('Filme já favoritado: ' . $tmdb_id);
+			}
+
+			/* BUSCANDO O FILME NA API DO TMDB */
+			$tmdbService = new TmdbService();
+			$tmdbResponse = $tmdbService->getDetailsMovieById(['id' => $tmdb_id]);
+			if (!$tmdbResponse) {
+				throw new \Exception('Filme não encontrado na API: ' . $tmdb_id);
+			}
+
+			/* ADICIONANDO O FILME NA BASE DE DADOS */
+			return $this->add([
+				'tmdb_id' => $tmdb_id,
+				'adult' => $tmdbResponse['adult'],
+				'original_language' => $tmdbResponse['original_language'],
+				'original_title' => $tmdbResponse['original_title'],
+				'title' => $tmdbResponse['title'],
+				'overview' => $tmdbResponse['overview'],
+				'backdrop_path' => $tmdbResponse['backdrop_path'],
+				'poster_path' => $tmdbResponse['poster_path'],
+				'release_date' => $tmdbResponse['release_date'],
+				'popularity' => $tmdbResponse['popularity'],
+				'vote_average' => $tmdbResponse['vote_average'],
+				'vote_count' => $tmdbResponse['vote_count'],
+				'genres' => array_column($tmdbResponse['genres'], 'name'),
+			]);
+
+		} catch (\Exception $e) {
+			throw new \Exception('Erro ao adicionar filme favorito: ' . $e->getMessage());
+		}
+	}
+
+	/**
 	 * Adiciona um filme favorito
 	 * @param array $data
 	 * @return array

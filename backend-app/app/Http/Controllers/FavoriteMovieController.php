@@ -48,40 +48,16 @@ class FavoriteMovieController extends Controller
 	 * @param Request $request
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function add(Request $request)
+	public function addByTmdbId(Request $request)
 	{
 		try {
 			$request->validate([
 				'tmdb_id' => 'required|integer',
-				'adult' => 'required|boolean',
-				'original_language' => 'required|string',
-				'original_title' => 'required|string',
-				'title' => 'required|string',
-				'overview' => 'required|string',
-				'backdrop_path' => 'required|string',
-				'poster_path' => 'required|string',
-				'release_date' => 'required|string',
-				'popularity' => 'required|float',
-				'vote_average' => 'required|float',
-				'vote_count' => 'required|integer',
-				'genres' => 'required|array',
 			], [
 				'tmdb_id.required' => 'O campo tmdb_id é obrigatório',
-				'adult.required' => 'O campo adult é obrigatório',
-				'original_language.required' => 'O campo original_language é obrigatório',
-				'original_title.required' => 'O campo original_title é obrigatório',
-				'title.required' => 'O campo title é obrigatório',
-				'overview.required' => 'O campo overview é obrigatório',
-				'backdrop_path.required' => 'O campo backdrop_path é obrigatório',
-				'poster_path.required' => 'O campo poster_path é obrigatório',
-				'release_date.required' => 'O campo release_date é obrigatório',
-				'popularity.required' => 'O campo popularity é obrigatório',
-				'vote_average.required' => 'O campo vote_average é obrigatório',
-				'vote_count.required' => 'O campo vote_count é obrigatório',
-				'genres.required' => 'O campo genres é obrigatório',
 			]);
 
-			$this->favoriteMovieService->add($request->all());
+			$this->favoriteMovieService->addByTmdbId($request->tmdb_id);
 
 			return response()->json([
 				'status' => 'success',

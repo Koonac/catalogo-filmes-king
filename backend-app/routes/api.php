@@ -21,6 +21,6 @@ Route::group(['prefix' => 'tmdb'], function () {
 
 Route::group(['prefix' => 'favorites'], function () {
 	Route::get('/list', [FavoriteMovieController::class, 'list']);
-	Route::post('/add', [FavoriteMovieController::class, 'add']);
+	Route::post('/add-tmdb', [FavoriteMovieController::class, 'addByTmdbId']);
 	Route::delete('/remove', [FavoriteMovieController::class, 'remove']);
 });
