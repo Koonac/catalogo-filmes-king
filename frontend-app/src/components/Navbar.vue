@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="sticky top-0 z-[1000] py-4 shadow-md bg-gradient-to-r from-[rgb(120,45,200)] to-[rgb(72,27,120)]"
+    class="sticky top-0 z-1000 py-4 shadow-md bg-linear-to-r from-[rgb(120,45,200)] to-[rgb(72,27,120)]"
   >
     <div
       class="container mx-auto px-8 flex items-center max-w-8xl md:flex-row flex-col md:gap-0 gap-4 relative"

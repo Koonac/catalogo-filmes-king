@@ -1,30 +1,3 @@
-<template>
-  <div class="w-full">
-    <label
-      v-if="label"
-      :for="inputId"
-      class="block text-sm font-medium text-gray-700 mb-2"
-    >
-      {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
-    </label>
-    <input
-      :id="inputId"
-      :type="type"
-      :placeholder="placeholder"
-      :value="modelValue"
-      :disabled="disabled"
-      :required="required"
-      :class="inputClasses"
-      @input="$emit('update:modelValue', $event.target.value)"
-      @blur="$emit('blur', $event)"
-      @focus="$emit('focus', $event)"
-    />
-    <p v-if="error" class="mt-1 text-sm text-red-600">{{ error }}</p>
-    <p v-if="hint && !error" class="mt-1 text-sm text-gray-500">{{ hint }}</p>
-  </div>
-</template>
-
 <script setup>
 import { computed } from "vue";
 
@@ -97,3 +70,30 @@ const inputClasses = computed(() => {
   } ${stateClasses} ${disabledClasses}`;
 });
 </script>
+
+<template>
+  <div class="w-full">
+    <label
+      v-if="label"
+      :for="inputId"
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      {{ label }}
+      <span v-if="required" class="text-red-500">*</span>
+    </label>
+    <input
+      :id="inputId"
+      :type="type"
+      :placeholder="placeholder"
+      :value="modelValue"
+      :disabled="disabled"
+      :required="required"
+      :class="inputClasses"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @blur="$emit('blur', $event)"
+      @focus="$emit('focus', $event)"
+    />
+    <p v-if="error" class="mt-1 text-sm text-red-600">{{ error }}</p>
+    <p v-if="hint && !error" class="mt-1 text-sm text-gray-500">{{ hint }}</p>
+  </div>
+</template>
