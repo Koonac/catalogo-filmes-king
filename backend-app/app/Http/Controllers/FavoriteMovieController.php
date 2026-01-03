@@ -57,11 +57,12 @@ class FavoriteMovieController extends Controller
 				'tmdb_id.required' => 'O campo tmdb_id é obrigatório',
 			]);
 
-			$this->favoriteMovieService->addByTmdbId($request->tmdb_id);
+			$favoriteMovie = $this->favoriteMovieService->addByTmdbId($request->tmdb_id);
 
 			return response()->json([
 				'status' => 'success',
 				'message' => 'Filme favorito adicionado com sucesso',
+				'data' => $favoriteMovie,
 			], 200);
 		} catch (\Exception $e) {
 			return response()->json([

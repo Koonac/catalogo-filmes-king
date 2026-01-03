@@ -62,6 +62,7 @@ export const useFavoriteStore = defineStore("favorites", {
         });
 
         if (response.data.status === "success") {
+          this.fetchFavorites();
           return response.data.data;
         } else {
           throw new Error(
@@ -82,17 +83,16 @@ export const useFavoriteStore = defineStore("favorites", {
     async removeFavorite(id) {
       this.error = null;
 
+      if (this.favorites.length > 0) {
+        this.removeFavoriteFromList(id);
+      }
+
       try {
         const response = await api.delete("/favorites/remove", {
           params: { id: id },
         });
 
         if (response.data.status === "success") {
-          if (this.favorites.length > 0) {
-            this.favorites = this.favorites.filter(
-              (favorite) => favorite.id !== id
-            );
-          }
           return true;
         } else {
           throw new Error(response.data.message || "Erro ao remover favorito");
@@ -104,6 +104,12 @@ export const useFavoriteStore = defineStore("favorites", {
           "Erro ao remover favorito";
         throw error;
       }
+    },
+
+    removeFavoriteFromList(id) {
+      this.favorites = this.favorites.filter(
+        (favorite) => String(favorite.id) !== String(id)
+      );
     },
   },
 });

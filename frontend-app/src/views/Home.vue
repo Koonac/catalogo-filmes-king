@@ -25,13 +25,10 @@ const handleSearchMovies = async () => {
 // FUNÇÃO PARA ADICIONAR FILME FAVORITO
 const handleAddFavorite = async (tmdbId) => {
   await favoriteStore.addFavorite(tmdbId);
-  await favoriteStore.fetchFavorites();
 };
 
 // FUNÇÃO PARA REMOVER FILME FAVORITO
 const handleRemoveFavorite = async (id) => {
-  console.log(id);
-
   await favoriteStore.removeFavorite(id);
 };
 </script>
@@ -64,7 +61,6 @@ const handleRemoveFavorite = async (id) => {
         Pesquisar
       </Button>
     </div>
-
     <!-- Lista de filmes -->
     <div v-if="moviesStore.loading">
       <div class="flex justify-center items-center h-full">
