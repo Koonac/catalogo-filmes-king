@@ -1,1 +1,1 @@
-https://api.themoviedb.org/3/search/movie
+Front end da aplicação
