@@ -59,7 +59,7 @@ class FavoriteMovieService
 				'popularity' => $tmdbResponse['popularity'],
 				'vote_average' => $tmdbResponse['vote_average'],
 				'vote_count' => $tmdbResponse['vote_count'],
-				'genres' => array_column($tmdbResponse['genres'], 'name'),
+				'genres' => $tmdbResponse['genres'], 'name',
 			]);
 
 		} catch (\Exception $e) {

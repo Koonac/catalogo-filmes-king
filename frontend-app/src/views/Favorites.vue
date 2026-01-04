@@ -1,12 +1,17 @@
 <script setup>
 import CardMovie from "../components/CardMovie.vue";
+import InputSelect from "../components/Input/Select.vue";
+import InputText from "../components/Input/Text.vue";
 import { useFavoriteStore } from "../stores/favorites";
+import { useGenresStore } from "../stores/genres";
 import { Icon } from "@iconify/vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 // INICIALIZANDO VARIÁVEIS
 const favoriteStore = useFavoriteStore();
-
+const genresStore = useGenresStore();
+const selectedGenres = ref([]);
+const searchQuery = ref("");
 // FUNÇÃO PARA CARREGAR FILMES FAVORITOS
 onMounted(async () => {
   await favoriteStore.fetchFavorites();
@@ -16,6 +21,11 @@ onMounted(async () => {
 const handleRemoveFavorite = async (id) => {
   await favoriteStore.removeFavorite(id);
 };
+
+// FUNÇÃO PARA PESQUISAR FILMES FAVORITOS
+const handleSearchFavoritesMovies = async () => {
+  //   await favoriteStore.searchFavoritesMovies(searchQuery.value, selectedGenres.value);
+};
 </script>
 
 <template>
@@ -24,6 +34,27 @@ const handleRemoveFavorite = async (id) => {
     <h1 class="text-2xl font-bold text-center text-gray-700 drop-shadow-lg">
       Meus filmes favoritos
     </h1>
+
+    <div class="flex gap-2">
+      <div class="w-3/4">
+        <InputText
+          label="Pesquisar por filme"
+          placeholder="A fantastica fábrica de chocolate"
+          v-model="searchQuery"
+          @keyup.enter="handleSearchFavoritesMovies"
+        />
+      </div>
+      <div class="w-1/4">
+        <InputSelect
+          v-model="selectedGenres"
+          :options="genresStore.getGenres"
+          label="Filtrar por gêneros"
+          placeholder="Selecione os gêneros"
+          clearable
+          multiple
+        />
+      </div>
+    </div>
 
     <!-- Lista de filmes -->
     <div v-if="favoriteStore.loading">
@@ -43,18 +74,18 @@ const handleRemoveFavorite = async (id) => {
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
       >
-          <CardMovie
-            v-for="favorite in favoriteStore.favorites"
-            :key="favorite.id"
-            :image="favorite.poster_path"
-            :title="favorite.title"
-            :rating="favorite.vote_average.toFixed(1)"
-            :year="favorite.release_date.split('-')[0]"
-            :hoverText="favorite.overview"
-            @removeFavorite="handleRemoveFavorite(favorite.id)"
-            isFavorite
-          />
-       </div>
+        <CardMovie
+          v-for="favorite in favoriteStore.favorites"
+          :key="favorite.id"
+          :image="favorite.poster_path"
+          :title="favorite.title"
+          :rating="favorite.vote_average.toFixed(1)"
+          :year="favorite.release_date.split('-')[0]"
+          :hoverText="favorite.overview"
+          @removeFavorite="handleRemoveFavorite(favorite.id)"
+          isFavorite
+        />
+      </div>
     </div>
   </div>
 </template>
