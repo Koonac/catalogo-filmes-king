@@ -234,13 +234,37 @@ curl -X DELETE http://localhost:8000/api/favorites/remove \
   -d '{"id": 1}'
 ```
 
-### 3. Testes automatizados (se disponíveis)
+### 3. Testes automatizados
 
-Se houver testes configurados no Laravel:
+O projeto possui testes automatizados usando PHPUnit (testes de unidade e integração).
+
+#### Executar todos os testes
 
 ```bash
 docker-compose exec backend php artisan test
 ```
+
+#### Executar testes específicos
+
+```bash
+# Apenas testes de unidade
+docker-compose exec backend php artisan test --testsuite=Unit
+
+# Apenas testes de integração
+docker-compose exec backend php artisan test --testsuite=Feature
+
+# Arquivo específico
+docker-compose exec backend php artisan test tests/Feature/FavoriteMovieControllerTest.php
+```
+
+#### Testes disponíveis
+
+- **Feature Tests**: `FavoriteMovieControllerTest`, `TmdbControllerTest`
+- **Unit Tests**: `FavoriteMovieServiceTest`, `TmdbServiceTest`
+
+Os testes cobrem funcionalidades como listagem, adição, remoção de favoritos, busca na API do TMDB, validações e tratamento de erros.
+
+**Nota**: Os testes utilizam SQLite em memória e simulam chamadas à API do TMDB, então não é necessário configurar MySQL ou ter uma chave válida do TMDB para executá-los.
 
 ### 4. Verificar logs
 
