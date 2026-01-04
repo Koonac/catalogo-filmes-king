@@ -13,10 +13,10 @@ export const useFavoriteStore = defineStore("favorites", {
 
   getters: {
     favoritesCount: (state) => state.favorites.length,
-    favoritesListTmdbId: (state) =>
-      state.favorites.map((favorite) => favorite.tmdb_id),
-    isFavorite: (getters) => (tmdbId) => {
-      return getters.favoritesListTmdbId.includes(String(tmdbId));
+    isFavorite: (state) => (tmdbId) => {
+      return state.favorites.find(
+        (favorite) => String(favorite.tmdb_id) === String(tmdbId)
+      ) !== undefined;
     },
     getIdFavoriteByTmdbId: (state) => (tmdbId) => {
       return state.favorites.find(
@@ -52,9 +52,18 @@ export const useFavoriteStore = defineStore("favorites", {
       }
     },
 
-    async addFavorite(tmdbId) {
+    async addFavorite(tmdbId, movie) {
       this.loading = true;
       this.error = null;
+
+	  /* ADICIONANDO FAVORITO ANTES DE CHAMAR A API
+	  PARA QUE O USUÁRIO VEJA O FAVORITO IMEDIATAMENTE */
+	  const favorite = {
+		id: null,
+		tmdb_id: tmdbId,
+		...movie,
+	  };
+	  this.addFavoriteToList(favorite);
 
       try {
         const response = await api.post("/favorites/add-tmdb", {
@@ -105,6 +114,13 @@ export const useFavoriteStore = defineStore("favorites", {
         throw error;
       }
     },
+
+	addFavoriteToList(favorite) {
+		if (this.favorites.find((f) => String(f.tmdb_id) === String(favorite.tmdb_id))) {
+			return;
+		}
+		this.favorites.push(favorite);
+	},
 
     removeFavoriteFromList(id) {
       this.favorites = this.favorites.filter(

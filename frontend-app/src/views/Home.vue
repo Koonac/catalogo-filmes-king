@@ -23,8 +23,8 @@ const handleSearchMovies = async () => {
 };
 
 // FUNÇÃO PARA ADICIONAR FILME FAVORITO
-const handleAddFavorite = async (tmdbId) => {
-  await favoriteStore.addFavorite(tmdbId);
+const handleAddFavorite = async (tmdbId, movie) => {
+  await favoriteStore.addFavorite(tmdbId, movie);
 };
 
 // FUNÇÃO PARA REMOVER FILME FAVORITO
@@ -87,7 +87,7 @@ const handleRemoveFavorite = async (id) => {
           :rating="movie.vote_average.toFixed(1)"
           :year="movie.release_date.split('-')[0]"
           :hoverText="movie.overview"
-          @addFavorite="handleAddFavorite(movie.id)"
+          @addFavorite="handleAddFavorite(movie.id, movie)"
           @removeFavorite="
             handleRemoveFavorite(favoriteStore.getIdFavoriteByTmdbId(movie.id))
           "
