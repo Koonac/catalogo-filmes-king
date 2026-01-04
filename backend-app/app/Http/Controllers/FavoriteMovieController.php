@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\FavoriteMovieService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class FavoriteMovieController extends Controller
 {
@@ -53,6 +54,8 @@ class FavoriteMovieController extends Controller
 					'to' => $favoriteMovies->lastItem(),
 				],
 			], 200);
+		} catch (ValidationException $e) {
+			throw $e;
 		} catch (\Exception $e) {
 			return response()->json([
 				'status' => 'error',
@@ -83,6 +86,8 @@ class FavoriteMovieController extends Controller
 				'message' => 'Filme favorito adicionado com sucesso',
 				'data' => $favoriteMovie,
 			], 200);
+		} catch (ValidationException $e) {
+			throw $e;
 		} catch (\Exception $e) {
 			return response()->json([
 				'status' => 'error',
@@ -112,6 +117,8 @@ class FavoriteMovieController extends Controller
 				'status' => 'success',
 				'message' => 'Filme favorito removido com sucesso',
 			], 200);
+		} catch (ValidationException $e) {
+			throw $e;
 		} catch (\Exception $e) {
 			return response()->json([
 				'status' => 'error',

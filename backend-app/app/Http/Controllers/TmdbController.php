@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class TmdbController extends Controller
 {
@@ -34,6 +35,8 @@ class TmdbController extends Controller
 				'status' => 'success',
 				'data' => $tmdbResponse,
 			], 200);
+		} catch (ValidationException $e) {
+			throw $e;
 		} catch (\Exception $e) {
 			return response()->json([
 				'status' => 'error',
