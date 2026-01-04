@@ -20,13 +20,23 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Definir diretório de trabalho
 WORKDIR /var/www/html
 
+# Copiar arquivos do projeto
+COPY . .
+
+# Criar diretórios necessários se não existirem
+RUN mkdir -p storage/framework/cache \
+	&& mkdir -p storage/framework/sessions \
+	&& mkdir -p storage/framework/views \
+	&& mkdir -p storage/logs \
+	&& mkdir -p bootstrap/cache
+
 # Instalar dependências do PHP (incluindo dev)
 RUN composer install || true
 
 # Configurar permissões
 RUN chown -R www-data:www-data /var/www/html \
-	&& chmod -R 755 /var/www/html/storage \
-	&& chmod -R 755 /var/www/html/bootstrap/cache
+	&& chmod -R 755 storage \
+	&& chmod -R 755 bootstrap/cache
 
 EXPOSE 9000
 
