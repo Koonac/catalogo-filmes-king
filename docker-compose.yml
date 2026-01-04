@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # Banco de dados MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: catalogo-filmes-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: catalogo_filmes
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - catalogo-filmes-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend Laravel
+  backend:
+    build:
+      context: ./backend-app
+      dockerfile: Dockerfile
+    container_name: catalogo-filmes-backend
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend-app:/var/www/html
+      - ./backend-app/storage:/var/www/html/storage
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - catalogo-filmes-network
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=catalogo_filmes
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    command: >
+      sh -c "sleep 5 &&
+             php artisan key:generate --force || true &&
+             php artisan migrate --force &&
+             php artisan serve --host=0.0.0.0 --port=8000"
+
+  # Frontend Vue.js
+  frontend:
+    build:
+      context: ./frontend-app
+      dockerfile: Dockerfile
+    container_name: catalogo-filmes-frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend-app:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - catalogo-filmes-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  catalogo-filmes-network:
+    driver: bridge
+

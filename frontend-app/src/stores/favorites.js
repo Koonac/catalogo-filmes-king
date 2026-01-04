@@ -47,8 +47,6 @@ export const useFavoriteStore = defineStore("favorites", {
           params,
         });
 
-        console.log(response.data);
-
         if (response.data.status === "success") {
           this.favorites = response.data.data || [];
           this.currentPage = response.data.pagination.current_page;
