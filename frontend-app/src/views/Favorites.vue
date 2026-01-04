@@ -1,7 +1,8 @@
 <script setup>
+import Button from "../components/Button.vue";
 import CardMovie from "../components/CardMovie.vue";
-import InputSelect from "../components/Input/Select.vue";
 import InputText from "../components/Input/Text.vue";
+import InputSelect from "../components/Input/Select.vue";
 import { useFavoriteStore } from "../stores/favorites";
 import { useGenresStore } from "../stores/genres";
 import { Icon } from "@iconify/vue";
@@ -12,20 +13,26 @@ const favoriteStore = useFavoriteStore();
 const genresStore = useGenresStore();
 const selectedGenres = ref([]);
 const searchQuery = ref("");
-// FUNÇÃO PARA CARREGAR FILMES FAVORITOS
-onMounted(async () => {
-  await favoriteStore.fetchFavorites();
-});
+
+// FUNÇÃO PARA PESQUISAR FILMES FAVORITOS
+const handleSearchFavoritesMovies = async () => {
+  const filters = {
+    search: searchQuery.value,
+    genres: selectedGenres.value,
+  };
+
+  await favoriteStore.fetchFavorites(filters);
+};
 
 // FUNÇÃO PARA REMOVER FILME FAVORITO
 const handleRemoveFavorite = async (id) => {
   await favoriteStore.removeFavorite(id);
 };
 
-// FUNÇÃO PARA PESQUISAR FILMES FAVORITOS
-const handleSearchFavoritesMovies = async () => {
-  //   await favoriteStore.searchFavoritesMovies(searchQuery.value, selectedGenres.value);
-};
+// FUNÇÃO PARA CARREGAR FILMES FAVORITOS
+onMounted(async () => {
+  await handleSearchFavoritesMovies();
+});
 </script>
 
 <template>
@@ -36,13 +43,26 @@ const handleSearchFavoritesMovies = async () => {
     </h1>
 
     <div class="flex gap-2">
-      <div class="w-3/4">
+      <div class="flex gap-2 w-3/4 items-end">
         <InputText
           label="Pesquisar por filme"
           placeholder="A fantastica fábrica de chocolate"
           v-model="searchQuery"
           @keyup.enter="handleSearchFavoritesMovies"
         />
+        <Button
+          color="primary"
+          variant="outline"
+          @click="handleSearchFavoritesMovies"
+          :loading="favoriteStore.loading"
+        >
+          <Icon
+            v-show="!favoriteStore.loading"
+            class="w-5 h-5 mr-2"
+            icon="mdi:search"
+          />
+          Pesquisar
+        </Button>
       </div>
       <div class="w-1/4">
         <InputSelect
@@ -52,6 +72,7 @@ const handleSearchFavoritesMovies = async () => {
           placeholder="Selecione os gêneros"
           clearable
           multiple
+          @update:modelValue="handleSearchFavoritesMovies"
         />
       </div>
     </div>

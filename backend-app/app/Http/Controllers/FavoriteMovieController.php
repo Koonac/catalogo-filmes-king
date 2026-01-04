@@ -19,8 +19,27 @@ class FavoriteMovieController extends Controller
 	public function list(Request $request)
 	{
 		try {
+			/* VALIDANDO OS PARAMETROS */
+			$request->validate([
+				'per_page' => 'nullable|integer',
+				'page' => 'nullable|integer',
+				'search' => 'nullable|string',
+				'genres' => 'nullable|array',
+			], [
+				'per_page.integer' => 'O campo per_page deve ser um número inteiro',
+				'page.integer' => 'O campo page deve ser um número inteiro',
+				'search.string' => 'O campo search deve ser uma string',
+				'genres.array' => 'O campo genres deve ser um array',
+			]);
+
+			/* OBTENDO OS PARAMETROS */
 			$perPage = $request->query('per_page', 15);
-			$favoriteMovies = $this->favoriteMovieService->list($perPage);
+			$filters = [
+				'search' => $request->query('search', null),
+				'genres' => $request->query('genres', null),
+			];
+			$favoriteMovies = $this->favoriteMovieService->list($perPage, $filters);
+
 			/* RETORNANDO A RESPOSTA EM JSON */
 			return response()->json([
 				'status' => 'success',

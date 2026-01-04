@@ -66,4 +66,44 @@ class FavoriteMovie extends Model
 
 		return 'https://image.tmdb.org/t/p/w500/' . $value;
 	}
+
+	/**
+	 * Scope para filtrar filmes por gêneros
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param array|int $genreIds IDs dos gêneros para filtrar
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeFilterByGenres($query, $genreIds)
+	{
+		if (empty($genreIds)) {
+			return $query;
+		}
+
+		$genreIds = is_array($genreIds) ? $genreIds : [$genreIds];
+		$genreIds = array_map('intval', $genreIds);
+
+		return $query->where(function ($q) use ($genreIds) {
+			foreach ($genreIds as $genreId) {
+				$q->orWhereRaw(
+					'JSON_SEARCH(genres, "one", ?, NULL, "$[*].id") IS NOT NULL',
+					[$genreId]
+				);
+			}
+		});
+	}
+
+	/**
+	 * Scope para filtrar filmes por busca de texto
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string|null $searchQuery Texto para buscar no título
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeFilterBySearch($query, $searchQuery)
+	{
+		if (empty($searchQuery)) {
+			return $query;
+		}
+
+		return $query->where('title', 'like', '%' . $searchQuery . '%');
+	}
 }

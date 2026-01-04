@@ -14,9 +14,11 @@ export const useFavoriteStore = defineStore("favorites", {
   getters: {
     favoritesCount: (state) => state.favorites.length,
     isFavorite: (state) => (tmdbId) => {
-      return state.favorites.find(
-        (favorite) => String(favorite.tmdb_id) === String(tmdbId)
-      ) !== undefined;
+      return (
+        state.favorites.find(
+          (favorite) => String(favorite.tmdb_id) === String(tmdbId)
+        ) !== undefined
+      );
     },
     getIdFavoriteByTmdbId: (state) => (tmdbId) => {
       return state.favorites.find(
@@ -26,12 +28,21 @@ export const useFavoriteStore = defineStore("favorites", {
   },
 
   actions: {
-    async fetchFavorites() {
+    async fetchFavorites(filters) {
       this.loading = true;
       this.error = null;
 
+      const params = {
+        per_page: this.perPage,
+        page: this.currentPage,
+        search: filters.search,
+        genres: filters.genres,
+      };
+
       try {
-        const response = await api.get("/favorites/list");
+        const response = await api.get("/favorites/list", {
+          params,
+        });
 
         if (response.data.status === "success") {
           this.favorites = response.data.data || [];
@@ -56,14 +67,14 @@ export const useFavoriteStore = defineStore("favorites", {
       this.loading = true;
       this.error = null;
 
-	  /* ADICIONANDO FAVORITO ANTES DE CHAMAR A API
+      /* ADICIONANDO FAVORITO ANTES DE CHAMAR A API
 	  PARA QUE O USUÁRIO VEJA O FAVORITO IMEDIATAMENTE */
-	  const favorite = {
-		id: null,
-		tmdb_id: tmdbId,
-		...movie,
-	  };
-	  this.addFavoriteToList(favorite);
+      const favorite = {
+        id: null,
+        tmdb_id: tmdbId,
+        ...movie,
+      };
+      this.addFavoriteToList(favorite);
 
       try {
         const response = await api.post("/favorites/add-tmdb", {
@@ -115,12 +126,16 @@ export const useFavoriteStore = defineStore("favorites", {
       }
     },
 
-	addFavoriteToList(favorite) {
-		if (this.favorites.find((f) => String(f.tmdb_id) === String(favorite.tmdb_id))) {
-			return;
-		}
-		this.favorites.push(favorite);
-	},
+    addFavoriteToList(favorite) {
+      if (
+        this.favorites.find(
+          (f) => String(f.tmdb_id) === String(favorite.tmdb_id)
+        )
+      ) {
+        return;
+      }
+      this.favorites.push(favorite);
+    },
 
     removeFavoriteFromList(id) {
       this.favorites = this.favorites.filter(

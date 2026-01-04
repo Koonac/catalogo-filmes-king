@@ -13,12 +13,20 @@ class FavoriteMovieService
 	/**
 	 * Lista todos os filmes favoritos com paginação
 	 * @param int $perPage Número de itens por página
+	 * @param array $filters Filtros de busca
 	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
 	 */
-	public function list(int $perPage = 15)
+	public function list(int $perPage = 15, array $filters = [])
 	{
 		try {
-			return $this->favoriteMovieModel->paginate($perPage);
+			$search = $filters['search'] ?? null;
+			$genres = $filters['genres'] ?? null;
+
+			$query = $this->favoriteMovieModel->query()
+				->filterBySearch($search)
+				->filterByGenres($genres);
+
+			return $query->paginate($perPage);
 		} catch (\Exception $e) {
 			throw new \Exception('Erro ao listar filmes favoritos: ' . $e->getMessage());
 		}
@@ -59,9 +67,8 @@ class FavoriteMovieService
 				'popularity' => $tmdbResponse['popularity'],
 				'vote_average' => $tmdbResponse['vote_average'],
 				'vote_count' => $tmdbResponse['vote_count'],
-				'genres' => $tmdbResponse['genres'], 'name',
+				'genres' => $tmdbResponse['genres'],
 			]);
-
 		} catch (\Exception $e) {
 			throw new \Exception('Erro ao adicionar filme favorito: ' . $e->getMessage());
 		}
