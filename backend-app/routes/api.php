@@ -16,7 +16,6 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'tmdb'], function () {
 	Route::get('/search-movie', [TmdbController::class, 'searchMovie']);
-	Route::get('/details-movie', [TmdbController::class, 'getDetailsMovieById']);
 });
 
 Route::group(['prefix' => 'favorites'], function () {
