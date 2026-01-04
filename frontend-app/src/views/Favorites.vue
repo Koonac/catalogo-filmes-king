@@ -3,6 +3,7 @@ import Button from "../components/Button.vue";
 import CardMovie from "../components/CardMovie.vue";
 import InputText from "../components/Input/Text.vue";
 import InputSelect from "../components/Input/Select.vue";
+import Pagination from "../components/Pagination.vue";
 import { useFavoriteStore } from "../stores/favorites";
 import { useGenresStore } from "../stores/genres";
 import { Icon } from "@iconify/vue";
@@ -15,13 +16,20 @@ const selectedGenres = ref([]);
 const searchQuery = ref("");
 
 // FUNÇÃO PARA PESQUISAR FILMES FAVORITOS
-const handleSearchFavoritesMovies = async () => {
+const handleSearchFavoritesMovies = async (page = 1) => {
   const filters = {
     search: searchQuery.value,
     genres: selectedGenres.value,
   };
 
-  await favoriteStore.fetchFavorites(filters);
+  await favoriteStore.fetchFavorites(filters, page);
+};
+
+// FUNÇÃO PARA MUDAR DE PÁGINA
+const handlePageChange = async (page) => {
+  await handleSearchFavoritesMovies(page);
+  // Scroll para o topo da lista de filmes
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 // FUNÇÃO PARA REMOVER FILME FAVORITO
@@ -31,7 +39,7 @@ const handleRemoveFavorite = async (id) => {
 
 // FUNÇÃO PARA CARREGAR FILMES FAVORITOS
 onMounted(async () => {
-  await handleSearchFavoritesMovies();
+  await handleSearchFavoritesMovies(1);
 });
 </script>
 
@@ -48,12 +56,12 @@ onMounted(async () => {
           label="Pesquisar por filme"
           placeholder="A fantastica fábrica de chocolate"
           v-model="searchQuery"
-          @keyup.enter="handleSearchFavoritesMovies"
+          @keyup.enter="handleSearchFavoritesMovies(1)"
         />
         <Button
           color="primary"
           variant="outline"
-          @click="handleSearchFavoritesMovies"
+          @click="handleSearchFavoritesMovies(1)"
           :loading="favoriteStore.loading"
         >
           <Icon
@@ -72,7 +80,7 @@ onMounted(async () => {
           placeholder="Selecione os gêneros"
           clearable
           multiple
-          @update:modelValue="handleSearchFavoritesMovies"
+          @update:modelValue="handleSearchFavoritesMovies(1)"
         />
       </div>
     </div>
@@ -107,6 +115,12 @@ onMounted(async () => {
           isFavorite
         />
       </div>
+      <!-- Componente de Paginação -->
+      <Pagination
+        :current-page="favoriteStore.currentPage"
+        :total-pages="favoriteStore.totalPages"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

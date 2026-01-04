@@ -2,6 +2,7 @@
 import InputText from "../components/Input/Text.vue";
 import Button from "../components/Button.vue";
 import CardMovie from "../components/CardMovie.vue";
+import Pagination from "../components/Pagination.vue";
 import { useMoviesStore } from "../stores/movies";
 import { useFavoriteStore } from "../stores/favorites";
 import { Icon } from "@iconify/vue";
@@ -18,8 +19,15 @@ onMounted(async () => {
 });
 
 // FUNÇÃO PARA PESQUISAR FILMES
-const handleSearchMovies = async () => {
-  await moviesStore.searchMovies(searchQuery.value);
+const handleSearchMovies = async (page = 1) => {
+  await moviesStore.searchMovies(searchQuery.value, page);
+};
+
+// FUNÇÃO PARA MUDAR DE PÁGINA
+const handlePageChange = async (page) => {
+  await moviesStore.searchMovies(searchQuery.value, page);
+  // Scroll para o topo da lista de filmes
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
 // FUNÇÃO PARA ADICIONAR FILME FAVORITO
@@ -45,12 +53,12 @@ const handleRemoveFavorite = async (id) => {
       <InputText
         placeholder="A fantastica fábrica de chocolate"
         v-model="searchQuery"
-        @keyup.enter="handleSearchMovies"
+        @keyup.enter="handleSearchMovies(1)"
       />
       <Button
         color="primary"
         variant="outline"
-        @click="handleSearchMovies"
+        @click="handleSearchMovies(1)"
         :loading="moviesStore.loading"
       >
         <Icon
@@ -94,6 +102,12 @@ const handleRemoveFavorite = async (id) => {
           :isFavorite="favoriteStore.isFavorite(movie.id)"
         />
       </div>
+      <!-- Componente de Paginação -->
+      <Pagination
+        :current-page="moviesStore.currentPage"
+        :total-pages="moviesStore.totalPages"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

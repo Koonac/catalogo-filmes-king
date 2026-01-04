@@ -21,9 +21,11 @@ class TmdbController extends Controller
 	{
 		try {
 			$request->validate([
-				'movie' => 'required|string|max:255'
+				'movie' => 'required|string|max:255',
+				'page' => 'nullable|integer',
 			], [
 				'movie.required' => 'O campo movie é obrigatório',
+				'page.integer' => 'O campo page deve ser um número inteiro',
 			]);
 
 			$tmdbResponse = $this->tmdbService->searchMovie($request->query());

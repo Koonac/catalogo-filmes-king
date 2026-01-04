@@ -5,7 +5,7 @@ export const useFavoriteStore = defineStore("favorites", {
   state: () => ({
     favorites: [],
     currentPage: 1,
-    perPage: 15,
+    perPage: 8,
     totalPages: 1,
     loading: false,
     error: null,
@@ -28,15 +28,18 @@ export const useFavoriteStore = defineStore("favorites", {
   },
 
   actions: {
-    async fetchFavorites(filters) {
+    async fetchFavorites(filters = {}, page = 1) {
       this.loading = true;
       this.error = null;
 
+      const search = filters.search || "";
+      const genres = filters.genres || [];
+
       const params = {
         per_page: this.perPage,
-        page: this.currentPage,
-        search: filters.search,
-        genres: filters.genres,
+        page: page,
+        search,
+        genres,
       };
 
       try {
@@ -44,11 +47,13 @@ export const useFavoriteStore = defineStore("favorites", {
           params,
         });
 
+        console.log(response.data);
+
         if (response.data.status === "success") {
           this.favorites = response.data.data || [];
           this.currentPage = response.data.pagination.current_page;
           this.perPage = response.data.pagination.per_page;
-          this.totalPages = response.data.pagination.total_pages;
+          this.totalPages = response.data.pagination.last_page;
         } else {
           throw new Error(response.data.message || "Erro ao buscar favoritos");
         }
