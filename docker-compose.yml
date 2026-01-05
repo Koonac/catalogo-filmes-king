@@ -37,7 +37,8 @@ services:
     networks:
       - catalogo-filmes-network
     command: >
-      sh -c "sleep 10 &&
+      sh -c "composer install --no-interaction --prefer-dist --optimize-autoloader &&
+             sleep 10 &&
              php artisan key:generate --force || true &&
              php artisan migrate --force || sleep 5 && php artisan migrate --force &&
              php artisan serve --host=0.0.0.0 --port=8000"

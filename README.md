@@ -412,6 +412,27 @@ catalogo-filmes-king/
 - Verifique se a chave está ativa no site do TMDB
 - Verifique os logs: `docker-compose logs -f backend`
 
+### Problema: Backend não carrega
+
+Se o backend não está respondendo ou você está vendo erros como `Failed to open stream: No such file or directory` relacionado ao `vendor/autoload.php`:
+
+- **O Docker ainda pode estar instalando as dependências com `composer install`**. Este processo pode levar alguns minutos na primeira execução
+- Verifique os logs do backend para acompanhar o progresso:
+  ```bash
+  docker-compose logs -f backend
+  ```
+- Procure por mensagens como "Installing dependencies" ou "Loading composer repositories"
+- Aguarde até ver a mensagem indicando que o servidor Laravel está rodando (geralmente algo como "Laravel development server started")
+- O processo de inicialização inclui:
+  1. Instalação das dependências do Composer (`composer install`)
+  2. Geração da chave da aplicação (`php artisan key:generate`)
+  3. Execução das migrations (`php artisan migrate`)
+  4. Inicialização do servidor Laravel (`php artisan serve`)
+- Se após alguns minutos o problema persistir, verifique:
+  - Se há erros nos logs relacionados ao Composer
+  - Se o container está rodando: `docker-compose ps`
+  - Tente reiniciar o container: `docker-compose restart backend`
+
 ### Problema: Frontend não carrega
 
 - Verifique se o container está rodando: `docker-compose ps`

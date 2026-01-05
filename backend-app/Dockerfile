@@ -30,9 +30,6 @@ RUN mkdir -p storage/framework/cache \
 	&& mkdir -p storage/logs \
 	&& mkdir -p bootstrap/cache
 
-# Instalar dependências do PHP (incluindo dev)
-RUN composer install || true
-
 # Configurar permissões
 RUN chown -R www-data:www-data /var/www/html \
 	&& chmod -R 755 storage \
