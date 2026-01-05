@@ -26,6 +26,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  genres: {
+    type: Array,
+    default: [],
+  },
 });
 
 defineEmits(["addFavorite", "removeFavorite", "moreInfo"]);
@@ -44,7 +48,9 @@ defineEmits(["addFavorite", "removeFavorite", "moreInfo"]);
       />
       <!-- Botão de favoritar -->
       <button
-        @click.stop="isFavorite ? $emit('removeFavorite') : $emit('addFavorite')"
+        @click.stop="
+          isFavorite ? $emit('removeFavorite') : $emit('addFavorite')
+        "
         class="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-200 z-10 backdrop-blur-sm group/favorite cursor-pointer"
       >
         <Icon
@@ -82,19 +88,12 @@ defineEmits(["addFavorite", "removeFavorite", "moreInfo"]);
                 : hoverText
             }}
           </p>
-          <!-- <p
-            class="flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-            <Button color="primary" variant="solid" @click="$emit('moreInfo')">
-              Saiba mais
-            </Button>
-          </p> -->
         </div>
       </div>
     </div>
 
     <!-- Informações do filme -->
-    <div class="p-4 bg-white">
+    <div class="p-4 bg-white h-full">
       <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
         {{ title.length > 30 ? title.substring(0, 35) + "..." : title }}
       </h3>
@@ -106,6 +105,9 @@ defineEmits(["addFavorite", "removeFavorite", "moreInfo"]);
         <div class="flex items-center gap-2">
           <span class="text-gray-500 text-sm">Ano: {{ year }}</span>
         </div>
+      </div>
+      <div v-if="genres.length > 0" class="flex items-center gap-2">
+        <span class="text-gray-500 text-sm">Gêneros: {{ genres }}</span>
       </div>
     </div>
   </div>

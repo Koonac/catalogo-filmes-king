@@ -110,6 +110,7 @@ onMounted(async () => {
           :title="favorite.title"
           :rating="favorite.vote_average.toFixed(1)"
           :year="favorite.release_date.split('-')[0]"
+		  :genres="favorite.genres.map(genre => genre.name).join(', ')"
           :hoverText="favorite.overview"
           @removeFavorite="handleRemoveFavorite(favorite.id)"
           isFavorite

@@ -87,8 +87,8 @@ class FavoriteMovie extends Model
 		return $query->where(function ($q) use ($genreIds) {
 			foreach ($genreIds as $genreId) {
 				$q->orWhereRaw(
-					'JSON_SEARCH(genres, "one", ?, NULL, "$[*].id") IS NOT NULL',
-					[$genreId]
+					'JSON_CONTAINS(genres, ?)',
+					['{"id": ' . $genreId . '}']
 				);
 			}
 		});
