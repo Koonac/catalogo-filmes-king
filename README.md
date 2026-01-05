@@ -13,20 +13,20 @@ Sistema de catálogo de filmes desenvolvido com Laravel (backend) e Vue.js (fron
 - [Link para obter a chave da API do TMDB](#link-para-obter-a-chave-da-api-do-tmdb)
 - [Como subir o frontend separado](#como-subir-o-frontend-separado)
 
-## 🛠 Tecnologias
+## Tecnologias
 
 - **Backend**: Laravel 12 com PHP 8.2
 - **Frontend**: Vue.js 3 com Vite
 - **Banco de Dados**: MySQL 8.0
 - **Containerização**: Docker e Docker Compose
 
-## 📦 Pré-requisitos
+## Pré-requisitos
 
 - Docker
 - Docker Compose
 - Chave de API do TMDB (veja instruções abaixo)
 
-## 🚀 Como rodar o projeto localmente com Docker
+## Como rodar o projeto localmente com Docker
 
 ### Passo 1: Clone o repositório
 
@@ -106,7 +106,7 @@ docker-compose logs -f frontend
 docker-compose down
 ```
 
-## 💾 Como importar o banco de dados
+## Como importar o banco de dados
 
 O projeto utiliza **migrations** do Laravel para criar a estrutura do banco de dados. Não é necessário importar um arquivo `.sql` manualmente.
 
@@ -140,7 +140,7 @@ A tabela principal é `favorites_movies`, criada pela migration:
 - **Port**: `3306`
 - **Host** (dentro do Docker): `mysql`
 
-## 📁 Onde está implementado o CRUD
+## Onde está implementado o CRUD
 
 O CRUD de filmes favoritos está implementado nas seguintes localizações:
 
@@ -193,7 +193,7 @@ O CRUD de filmes favoritos está implementado nas seguintes localizações:
 - **Arquivo**: `frontend-app/src/stores/favorites.js`
 - **Ações**: `fetchFavorites()`, `removeFavorite()`
 
-## 🧪 Como testar a aplicação
+## Como testar a aplicação
 
 ### 1. Teste de acesso à interface web
 
@@ -278,7 +278,7 @@ docker-compose logs -f backend
 docker-compose logs -f frontend
 ```
 
-## 🔑 Link para obter a chave da API do TMDB
+## Link para obter a chave da API do TMDB
 
 ### Passo 1: Criar conta no TMDB
 
@@ -318,7 +318,7 @@ TMDB_TOKEN=sua_chave_aqui
 - Documentação da API: https://developers.themoviedb.org/3
 - Configurações da API: https://www.themoviedb.org/settings/api
 
-## 🎨 Como subir o frontend separado
+## Como subir o frontend separado
 
 Se você quiser rodar apenas o frontend Vue.js separadamente (sem Docker):
 
