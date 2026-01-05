@@ -2,8 +2,11 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Instalar dependências (será sobrescrito pelo volume em dev)
-RUN npm install || true
+# Copiar arquivos de dependências
+COPY package*.json ./
+
+# Instalar dependências
+RUN npm install
 
 EXPOSE 5173
 
